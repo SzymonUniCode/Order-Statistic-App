@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "order_app"
+version = "0.1.0"
+description = "App which shows data of order, products, users and basic statistics"
+authors = ["Szymon Turek <szymon.codes@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"                       # wersja Pythona używana w projekcie
+flask = "^3.1.1"                       # framework webowy do budowy API
+gunicorn = "^23.0.0"                   # serwer produkcyjny WSGI do uruchamiania Flask w Dockerze
+python-dotenv = "^1.1.1"               # ładowanie zmiennych z pliku .env
+pydantic = "^2.11.7"                   # walidacja danych i definicja modeli danych
+flask-pydantic = "^0.13.1"             # integracja Flask + Pydantic (walidacja requestów/response)
+flasgger = "^0.9.7.1"                  # automatyczna dokumentacja API (Swagger UI)
+pyyaml = "^6.0.2"                      # obsługa plików YAML (często dla Flasgger/OpenAPI)
+flask-pydantic-spec = "^0.8.6"         # OpenAPI spec + walidacja requestów via Pydantic
+mysqlclient = "^2.2.4"                 # szybki sterownik MySQL (C-based)
+SQLAlchemy = "^2.0"                    # ORM do pracy z bazą danych
+Flask-SQLAlchemy = "^3.1"              # integracja SQLAlchemy z Flask (modele, db.session)
+Flask-Migrate = "^4.0"                 # migracje baz danych (alembic + Flask)
+dependency-injector = "^4.48.1"        # dependency injection container (architektura modularna)
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"                      # framework do testów
+pytest-cov = "^6.2.1"                  # pokrycie testów (coverage)
+pytest-flask = "^1.3.0"                # ułatwia testowanie aplikacji Flask
+mypy = "^1.17.1"                       # statyczne sprawdzanie typów
+types-flask-migrate = "^4.1.0.20250809" # typy dla Flask-Migrate używane przez mypy
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+# Dodawanie pakietu do dependencies
+
+# poetry add flask
+# poetry add group dev mypy
