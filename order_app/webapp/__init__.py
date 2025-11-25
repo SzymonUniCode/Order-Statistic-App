@@ -1,19 +1,23 @@
 from flask import Flask
-from settings import config
-from container import Container
-from extensions import db, migrate
-from core.error_handlers import register_error_handlers
+from .settings import config
+from .container import Container
+from .extensions import db, migrate
+from .core.error_handlers import register_error_handlers
 
 def create_app() -> Flask:
     app = Flask(__name__)                               # screate flask app engine
-    app.config.from_object(config['default'])           # taking settings from whole settings.py and copy them
-    config['default'].init_app(app)                     # set copied settings to app.config
+
 
     container = Container()                             # create containers of objects to avoid circular dependencies
     container.wire()                                    # check all injections and inject objects to app
 
+    app.config.from_object(config['default'])           # taking settings from whole settings.py and copy them
+    config['default'].init_app(app)                     # set copied settings to app.config
+
     register_error_handlers(app)
     # app.register_blueprint(api_bp)
+
+    from .database.models import users
 
     db.init_app(app)                                    # connect db to app, without it SQLAlchemy won't work
     migrate.init_app(app, db)                           # connect Migrate to app. We inform Migrate that this is my app and this is my db
