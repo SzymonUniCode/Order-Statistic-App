@@ -4,6 +4,10 @@
 # but inform program where it will be possible and what is goes inside the service.
 
 from dependency_injector import containers, providers
+from webapp.database.repositories.orders import TotalOrderRepository
+from webapp.database.repositories.products import ProductRepository
+from webapp.database.repositories.storage import StorageRepository
+from webapp.database.repositories.users import UserRepository
 
 
 class Container(containers.DeclarativeContainer):
@@ -20,13 +24,14 @@ class Container(containers.DeclarativeContainer):
 
 
 
-# Create containers to inject
+    # Create containers to inject
 
-    # inbound_repository = providers.Singleton(InboundRepository)
-    # outbound_repository = providers.Singleton(OutboundRepository)
-    # storage_repository = providers.Singleton(StorageRepository)
-    #
-    #
+    user_repository = providers.Singleton(UserRepository)
+    storage_repository = providers.Singleton(StorageRepository)
+    products_repository = providers.Singleton(ProductRepository)
+    total_orders_repository = providers.Singleton(TotalOrderRepository)
+
+
     # inbound_service = providers.Singleton(
     #     InboundService,
     #     inbound_repository=inbound_repository)
