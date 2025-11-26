@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 
-class Product(db.Model):
+class Product(db.Model):     # type: ignore
     __tablename__ = 'products'
 
     __table_args__ = (

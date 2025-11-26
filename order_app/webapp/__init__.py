@@ -31,7 +31,8 @@ def create_app() -> Flask:
         routes = []
 
         for rule in app.url_map.iter_rules():
-            methods = ",".join(sorted(rule.methods - {"HEAD", "OPTIONS"}))
+            raw_methods = rule.methods or set()
+            methods = ",".join(sorted(raw_methods - {"HEAD", "OPTIONS"}))
             routes.append(f"{methods:10}  {rule.rule}")
 
         app.logger.info("====== API ROUTES ======")

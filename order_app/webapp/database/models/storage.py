@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from webapp.extensions import db, migrate
 
 
-class Storage(db.Model):
+class Storage(db.Model):    # type: ignore
     __tablename__ = 'storage'
 
     sku: Mapped[str] = mapped_column(

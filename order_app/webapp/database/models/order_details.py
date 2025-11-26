@@ -1,15 +1,16 @@
-from sqlalchemy import Integer, String, ForeignKey, DateTime, func
+from sqlalchemy import Integer, ForeignKey, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from webapp.extensions import db, migrate
+from webapp.extensions import db
 from datetime import datetime
 
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .products import Product
+    from .orders import Order
 
 
-class OrderDetail(db.Model):
+class OrderDetail(db.Model):    # type: ignore
     __tablename__ = 'order_details'
 
     __table_args__ = (
@@ -26,6 +27,7 @@ class OrderDetail(db.Model):
     created: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     product: Mapped['Product'] = relationship(back_populates='order_details')
+    order: Mapped['Order'] = relationship(back_populates='order_details')
 
 
     def __repr__(self):

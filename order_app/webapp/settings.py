@@ -55,7 +55,7 @@ class Config:
         if getattr(app, "_logging_configured", False): # if logs are set, do nothing
             return
 
-        app._logging_configured = True                 # set logs as set. Allow avoiding set logs multiple times
+        app._logging_configured = True # type: ignore                 # set logs as set. Allow avoiding set logs multiple times
         os.makedirs("logs", exist_ok=True)       # create folder for logs
         logger_level = "DEBUG" if app.config.get("FLASK_DEBUG") else "INFO"     # set level of logs from .env
                                                                                 # If true logs are in DEBUG mode which means
