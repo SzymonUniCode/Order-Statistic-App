@@ -25,4 +25,4 @@ class Product(db.Model):     # type: ignore
 
 
     def __repr__(self):
-        return f"<SKU='{self.sku}' name='{self.name}')>"
+        return f"<SKU='{self.sku}' name='{self.name}' price={self.price})>"
