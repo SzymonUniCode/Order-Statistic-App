@@ -6,8 +6,8 @@ from webapp.database.models.order_details import OrderDetail
 from sqlalchemy.orm import Session
 
 
-def test_product_model_repr_and_fields(session: Session, product: Product):
-    product_from_db = session.get(Product, product.sku)
+def test_product_model_repr_and_fields(session: Session, product_model: Product):
+    product_from_db = session.get(Product, product_model.sku)
     assert product_from_db is not None
 
     assert product_from_db.sku == "SKU-123"
@@ -20,8 +20,8 @@ def test_product_model_repr_and_fields(session: Session, product: Product):
     assert "100.4" in rep
 
 
-def test_user_model_repr_and_fields(session: Session, user: User):
-    user_from_db = session.get(User, user.id)
+def test_user_model_repr_and_fields(session: Session, user_model: User):
+    user_from_db = session.get(User, user_model.id)
     assert user_from_db is not None
 
     assert user_from_db.username == "John Test"
@@ -30,8 +30,8 @@ def test_user_model_repr_and_fields(session: Session, user: User):
     assert "username='John Test'" in rep
 
 
-def test_storage_model_repr_and_fields(session: Session, storage: Storage):
-    storage_from_db = session.get(Storage, storage.sku)
+def test_storage_model_repr_and_fields(session: Session, storage_model: Storage):
+    storage_from_db = session.get(Storage, storage_model.sku)
     assert storage_from_db is not None
 
     assert storage_from_db.sku == "SKU-123"
@@ -42,8 +42,8 @@ def test_storage_model_repr_and_fields(session: Session, storage: Storage):
     assert "qty=100" in rep
 
 
-def test_order_model_and_fields(session: Session, order: Order):
-    order_from_db = session.get(Order, order.id)
+def test_order_model_and_fields(session: Session, order_model: Order):
+    order_from_db = session.get(Order, order_model.id)
     assert order_from_db is not None
 
     assert order_from_db.id == 1
@@ -53,8 +53,8 @@ def test_order_model_and_fields(session: Session, order: Order):
     assert f"User(id=1)"
 
 
-def test_order_details_model_and_fields(session: Session, order_details_1: OrderDetail):
-    order_details_from_db = session.get(OrderDetail, (order_details_1.order_id, order_details_1.product_sku))
+def test_order_details_model_and_fields(session: Session, order_details_model: OrderDetail):
+    order_details_from_db = session.get(OrderDetail, (order_details_model.order_id, order_details_model.product_sku))
     assert order_details_from_db is not None
 
     assert order_details_from_db.order_id == 1

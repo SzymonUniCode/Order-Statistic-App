@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, cast
 from sqlalchemy import select
 from flask_sqlalchemy.model import Model
 from webapp.extensions import db
@@ -16,6 +16,7 @@ class GenericRepository[T: Model]:
         db.session.add_all(list(instances))
 
     def get(self, pk: int) -> T | None:
+        pk = cast(int, pk) # for IDE
         return db.session.get(self.model, pk)
 
     def get_all(self) -> list[T]:

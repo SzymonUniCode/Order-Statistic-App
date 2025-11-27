@@ -1,0 +1,16 @@
+[run]
+source = webapp
+parallel = true
+
+[paths]
+source =
+    webapp
+    */order_app/webapp
+
+[report]
+omit =
+    webapp/settings.py
+    webapp/__init__.py
+    webapp/core/error_handlers.py
+    webapp/services/exceptions.py
+    */tests/*

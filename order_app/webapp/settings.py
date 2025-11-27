@@ -17,25 +17,15 @@ class Config:
     FLASK_ENV: str = os.getenv("FLASK_ENV", "development")
     FLASK_DEBUG: bool = os.getenv("FLASK_DEBUG", "False") in ("1", "true", "True")
     TESTING: bool = False
-
-    # TEST / DEV DATABASE SWITCH
-    if FLASK_ENV == "test":
-        MYSQL_DIALECT: str = os.getenv("MYSQL_DIALECT", "mysql+mysqldb")
-        MYSQL_HOST: str = os.getenv("MYSQL_HOST", "mysql-test")
-        MYSQL_DATABASE: str = os.getenv("MYSQL_DATABASE", "db_orders_test")
-        MYSQL_USER: str = os.getenv("MYSQL_USER", "user")
-        MYSQL_PASSWORD: str = os.getenv("MYSQL_PASSWORD", "user1234")
-        MYSQL_PORT: str = os.getenv("MYSQL_PORT", "3306")
     # ------------------------------------------------------------------------------------
     # Basic MySQL Configuration created by Docker
     # ------------------------------------------------------------------------------------
-    else:
-        MYSQL_DIALECT: str = os.getenv("MYSQL_DIALECT", "mysql+mysqldb")
-        MYSQL_HOST: str = os.getenv("DB_HOST", "mysql")
-        MYSQL_DATABASE: str = os.getenv("MYSQL_DATABASE", "magazyn")
-        MYSQL_USER: str = os.getenv("MYSQL_USER", "user")
-        MYSQL_PASSWORD: str = os.getenv("MYSQL_PASSWORD", "password")
-        MYSQL_PORT: str = os.getenv("MYSQL_PORT", "3308")
+    MYSQL_DIALECT: str = os.getenv("MYSQL_DIALECT", "mysql+mysqldb")
+    MYSQL_HOST: str = os.getenv("DB_HOST", "mysql")
+    MYSQL_DATABASE: str = os.getenv("MYSQL_DATABASE", "magazyn")
+    MYSQL_USER: str = os.getenv("MYSQL_USER", "user")
+    MYSQL_PASSWORD: str = os.getenv("MYSQL_PASSWORD", "password")
+    MYSQL_PORT: str = os.getenv("MYSQL_PORT", "3308")
 
     # ------------------------------------------------------------------------------------
     # SQLAlchemy Database URI &

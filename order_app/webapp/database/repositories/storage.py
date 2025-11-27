@@ -8,10 +8,14 @@ class StorageRepository(GenericRepository[Storage]):
     def __init__(self) -> None:
         super().__init__(Storage)
 
-    def get_by_sku(self, sku: str) -> list[Storage] | None:
+    def get_by_sku(self, sku: str) -> Storage | None:
         stmt = select(Storage).where(Storage.sku == sku)
-        return list(db.session.scalars(stmt).all())
+        return db.session.scalar(stmt)
 
-    def get_by_qty_between(self, min_qty: int = 0, max_qty: int = 9999) -> list[Storage] | None:
-        stmt = select(Storage).where(Storage.qty >= min_qty, Storage.qty <= max_qty)
+    def get_by_qty_between(self, min_qty: int = 0, max_qty: int = 9999) -> list[Storage]:
+        stmt = (
+            select(Storage)
+            .where(Storage.qty >= min_qty)
+            .where(Storage.qty <= max_qty)
+        )
         return list(db.session.scalars(stmt).all())
