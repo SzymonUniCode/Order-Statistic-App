@@ -16,8 +16,8 @@ class Container(containers.DeclarativeContainer):
     # Dzieki temu w tych miejscach uzyjesz @inject, Provide[...]
     wiring_config = containers.WiringConfiguration(
         packages=[
-            "webapp.api.inbound",
-            "webapp.api.outbound",
+            "webapp.api.products",
+            "webapp.api.orders",
             "webapp.api.storage"
         ]
     )
