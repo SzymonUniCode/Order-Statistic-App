@@ -12,3 +12,6 @@ class ValidationException(ServiceException):
 
 class NotEnoughStockException(ServiceException):
     pass
+
+class ProductAlreadyExistsException(ServiceException):
+    pass
