@@ -15,3 +15,6 @@ class NotEnoughStockException(ServiceException):
 
 class ProductAlreadyExistsException(ServiceException):
     pass
+
+class UserAlreadyExistsException(ServiceException):
+    pass

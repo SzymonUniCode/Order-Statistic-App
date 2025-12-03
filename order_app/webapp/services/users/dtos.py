@@ -4,8 +4,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class CreateUSerDTO:
-    id: int
+class CreateUserDTO:
     name: str
 
 
