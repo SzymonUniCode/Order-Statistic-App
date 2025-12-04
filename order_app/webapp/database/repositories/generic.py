@@ -26,7 +26,7 @@ class GenericRepository[T: Model]:
     def delete(self, instance: T) -> None:
         db.session.delete(instance)
 
-    def delete_by_id(self, pk: int) -> None:
+    def delete_by_id(self, pk: int | str) -> None:
         obj = db.session.get(self.model, pk)
         if obj:
             db.session.delete(obj)

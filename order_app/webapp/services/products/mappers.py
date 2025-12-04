@@ -1,5 +1,3 @@
-from sqlalchemy import cast
-
 from webapp.database.models.products import Product
 from webapp.services.products.dtos import ReadProductDTO
 from decimal import Decimal

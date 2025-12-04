@@ -23,26 +23,23 @@ class UserService:
 
     def get_by_username(self, username: str) -> ReadUserDTO | None:
         user = self.user_repo.get_by_username(username)
-        return user_to_dto(user) if user is not None else None
+        return user_to_dto(user) if user else None
 
 # ---------------------------------------------------------------------------------------
 # Delete methods
 # ---------------------------------------------------------------------------------------
 
+    def delete_user_by_id(self, user_id: int) -> str:
+        user = self._get_existing_user(user_id)
+        with db.session.begin():
+            self.user_repo.delete(user)
+        return f"User with id {user_id} deleted successfully."
+
     def delete_user(self, user: User) -> str:
-        if self._check_if_user_exists(user.id) is True:
-            with db.session.begin():
-                self.user_repo.delete(user)
+        self._get_existing_user(user.id)
+        with db.session.begin():
+            self.user_repo.delete(user)
         return f"User {user.username} deleted successfully."
-
-
-
-
-    def delete_user_by_id(self, id: int) -> str:
-        if self._check_if_user_exists(id) is True:
-            with db.session.begin():
-                self.user_repo.delete_by_id(id)
-        return f"User with id {id} deleted successfully."
 
 # ---------------------------------------------------------------------------------------
 # Create methods
@@ -50,7 +47,7 @@ class UserService:
 
     def add_user(self, dto: CreateUserDTO):
         with db.session.begin():
-            self._check_if_user(dto.name)
+            self._check_if_username_free(dto.name)
             user = User(username=dto.name)
             self.user_repo.add(user)
         return user_to_dto(user)
@@ -62,14 +59,12 @@ class UserService:
 # Privet methods
 # ---------------------------------------------------------------------------------------
 
-    def _check_if_user(self, username: str) -> None:
-        user = self.user_repo.get_by_username(username)
-
-        if user is not None:
+    def _check_if_username_free(self, username: str) -> None:
+        if self.user_repo.get_by_username(username) is not None:
             raise UserAlreadyExistsException(f"User with username {username} already exists.")
-        return None
 
-    def _check_if_user_exists(self, id: int) -> bool:
-        if self.user_repo.get(id) is not None:
-            return True
-        raise NotFoundException(f"User with username {id} not found.")
+    def _get_existing_user(self, user_id: int) -> User:
+        user = self.user_repo.get(user_id)
+        if user is None:
+            raise NotFoundException(f"User with id {user_id} not found.")
+        return user
