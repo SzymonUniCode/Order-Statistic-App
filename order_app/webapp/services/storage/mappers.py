@@ -5,5 +5,5 @@ from webapp.services.storage.dtos import ReadStorageDTO
 def storage_to_dto(storage: Storage) -> ReadStorageDTO:
     return ReadStorageDTO(
         sku = storage.sku,
-        quantity = storage.quantity,
+        quantity = storage.qty,
     )

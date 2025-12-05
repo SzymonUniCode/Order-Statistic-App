@@ -47,20 +47,20 @@ class StorageService:
 
 
 
-    def add_qty_to_storage_sku(self, sku: str, qty: int) -> str:
-        with db.session.begin():
-            storage_product = self._ensure_product(sku)
-            storage_product.qty += qty
-        return f'{qty} added to {storage_product.sku}'
-
-
-    def deduct_qty_from_storage_sku(self, dto: ModifyStorageDTO, qty: int) -> str:
+    def add_qty_to_storage_sku(self, dto: ModifyStorageDTO) -> str:
         with db.session.begin():
             storage_product = self._ensure_product(dto.sku)
-            if storage_product.qty < qty:
+            storage_product.qty += dto.quantity
+        return f'{dto.quantity} added to {storage_product.sku}'
+
+
+    def deduct_qty_from_storage_sku(self, dto: ModifyStorageDTO) -> str:
+        with db.session.begin():
+            storage_product = self._ensure_product(dto.sku)
+            if storage_product.qty < dto.quantity:
                 raise ServiceException(f'Product {storage_product.sku} cannot have negative qty')
-            storage_product.qty -= qty
-        return f'{qty} deduct to {storage_product.sku}'
+            storage_product.qty -= dto.quantity
+        return f'{dto.quantity} deduct to {storage_product.sku}'
 
 
     def delete_storage_sku(self, sku: str) -> str:
