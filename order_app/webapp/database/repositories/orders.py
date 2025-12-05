@@ -6,7 +6,7 @@ from webapp.database.models.orders import Order
 from webapp.database.models.order_details import OrderDetail
 from webapp.database.models.products import Product
 
-from sqlalchemy import select
+from sqlalchemy import select, desc
 
 
 class TotalOrderRepository(GenericRepository[Order]):
@@ -20,6 +20,7 @@ class TotalOrderRepository(GenericRepository[Order]):
                 joinedload(Order.order_details)
                 .joinedload(OrderDetail.product)
             )
+            .order_by(desc(Order.id))
         )
 
         result = db.session.execute(stmt).unique().scalars().all()
@@ -37,6 +38,21 @@ class TotalOrderRepository(GenericRepository[Order]):
         )
 
         return db.session.execute(stmt).unique().scalars().first()
+
+
+    def get_total_orders_by_user_name(self, user_name: str) -> list[Order]:
+        stmt = (
+            select(Order)
+            .where(Order.user.username == user_name)
+            .options(
+                joinedload(Order.order_details)
+                .joinedload(OrderDetail.product)
+            )
+        )
+
+        return db.session.execute(stmt).scalars().all()
+
+
 
 
     def add_product_to_order(self, order: Order, product_sku: str, qty: int) -> OrderDetail | None:

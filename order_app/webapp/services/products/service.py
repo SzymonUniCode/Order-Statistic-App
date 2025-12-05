@@ -4,7 +4,7 @@ from webapp.database.models.products import Product
 
 from webapp.database.repositories.products import ProductRepository
 
-from webapp.services.exceptions import ServiceException, NotFoundException, ValidationException, ProductAlreadyExistsException
+from webapp.services.exceptions import NotFoundException, ProductAlreadyExistsException
 
 from webapp.services.products.dtos import CreateProductDTO, ReadProductDTO
 
