@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, ForeignKey, DateTime, func
+from sqlalchemy import Integer, ForeignKey, DateTime, func, PrimaryKeyConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from webapp.extensions import db
 from datetime import datetime
@@ -15,6 +15,7 @@ class OrderDetail(db.Model):    # type: ignore
 
     __table_args__ = (
         db.PrimaryKeyConstraint("order_id", "product_sku"),
+        db.UniqueConstraint("order_id", "product_sku")
     )
 
     order_id: Mapped[int] = mapped_column(

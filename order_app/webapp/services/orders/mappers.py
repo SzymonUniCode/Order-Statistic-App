@@ -8,7 +8,7 @@ from webapp.services.orders.dtos import ReadOrderDTO, ReadOrderDetailDTO, Create
 def order_to_dto(order: Order) -> ReadOrderDTO:
     return ReadOrderDTO(
         id=order.id,
-        user_name=order.user.username,
+        user_name=order.user.username if order.user else "",
         details=[order_detail_to_dto(od) for od in order.order_details]
     )
 

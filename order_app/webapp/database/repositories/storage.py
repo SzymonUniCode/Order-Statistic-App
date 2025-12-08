@@ -19,3 +19,13 @@ class StorageRepository(GenericRepository[Storage]):
             .where(Storage.qty <= max_qty)
         )
         return list(db.session.scalars(stmt).all())
+
+
+    def get_by_sku_for_update(self, sku: str) -> Storage | None:
+        stmt = (
+            select(Storage)
+            .where(Storage.sku == sku)
+            .with_for_update() # lock the row - avoiding situation where many order will try to update the same product
+        )
+
+        return db.session.scalar(stmt)

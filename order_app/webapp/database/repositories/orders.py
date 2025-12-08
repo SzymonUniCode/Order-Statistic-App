@@ -17,6 +17,7 @@ class TotalOrderRepository(GenericRepository[Order]):
         stmt = (
             select(Order)
             .options(
+                selectinload(Order.user),
                 joinedload(Order.order_details)
                 .joinedload(OrderDetail.product)
             )
@@ -32,6 +33,7 @@ class TotalOrderRepository(GenericRepository[Order]):
             select(Order)
             .where(Order.id == order_id)
             .options(
+                selectinload(Order.user),
                 joinedload(Order.order_details)
                 .joinedload(OrderDetail.product)
             )
@@ -45,12 +47,13 @@ class TotalOrderRepository(GenericRepository[Order]):
             select(Order)
             .where(Order.user.username == user_name)
             .options(
+                selectinload(Order.user),
                 joinedload(Order.order_details)
                 .joinedload(OrderDetail.product)
             )
         )
 
-        return db.session.execute(stmt).scalars().all()
+        return list(db.session.execute(stmt).scalars().all())
 
 
 

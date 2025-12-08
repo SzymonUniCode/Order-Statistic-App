@@ -7,3 +7,5 @@ def storage_to_dto(storage: Storage) -> ReadStorageDTO:
         sku = storage.sku,
         quantity = storage.qty,
     )
+
+

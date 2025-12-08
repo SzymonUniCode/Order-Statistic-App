@@ -25,4 +25,10 @@ class CreateOrderDetailDTO:
 @dataclass(frozen=True)
 class CreateOrderDTO:
     user_name: str
-    details: List[CreateOrderDetailDTO] | None
+    details: List[CreateOrderDetailDTO]
+
+
+@dataclass(frozen=True)
+class DeleteProductsInOrderDTO:
+    order_id: int
+    product_sku: str
