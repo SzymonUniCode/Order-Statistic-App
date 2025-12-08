@@ -21,16 +21,16 @@ def test_add_order_and_get_all_total_orders(
     assert len(orders_from_db) == 3
 
     assert orders_from_db[0].order_details[0].product_sku == "SKU-1"
-    assert orders_from_db[0].order_details[0].qty == 10
-
-    assert orders_from_db[0].order_details[1].product_sku == "SKU-2"
-    assert orders_from_db[0].order_details[1].qty == 20
+    assert orders_from_db[0].order_details[0].qty == 90
 
     assert orders_from_db[1].order_details[0].product_sku == "SKU-3"
     assert orders_from_db[1].order_details[0].qty == 30
 
     assert orders_from_db[2].order_details[0].product_sku == "SKU-1"
-    assert orders_from_db[2].order_details[0].qty == 90
+    assert orders_from_db[2].order_details[0].qty == 10
+
+    assert orders_from_db[2].order_details[1].product_sku == "SKU-2"
+    assert orders_from_db[2].order_details[1].qty == 20
 
 
 

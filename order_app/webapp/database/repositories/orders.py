@@ -59,11 +59,9 @@ class TotalOrderRepository(GenericRepository[Order]):
 
 
     def add_product_to_order(self, order: Order, product_sku: str, qty: int) -> OrderDetail | None:
-        order_detail = OrderDetail(
-            order_id=order.id,
-            product_sku=product_sku,
-            qty=qty,
-        )
-        db.session.add(order_detail)
+        od = OrderDetail(product_sku=product_sku, qty=qty)
+        order.order_details.append(od)
 
-        return order_detail
+        db.session.flush()
+
+        return od

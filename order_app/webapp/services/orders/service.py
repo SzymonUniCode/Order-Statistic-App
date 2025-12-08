@@ -18,15 +18,12 @@ class OrderService:
     def __init__(self,
                  order_repo: TotalOrderRepository,
                  storage_repo: StorageRepository,
-                 user_service: UserService,
-                 storage_service: StorageService,
-                 product_service: ProductService,
+                 user_repo: UserRepository,
                  ):
         self.order_repo = order_repo
         self.storage_repo = storage_repo
-        self.user_service = user_service
-        self.storage_service = storage_service
-        self.product_service = product_service
+        self.user_repo = user_repo
+
 
 # ---------------------------------------------------------------------------------------
 # Read methods
@@ -54,14 +51,17 @@ class OrderService:
 # ---------------------------------------------------------------------------------------
 
     def add_order_with_details(self, dto: CreateOrderDTO) -> None:
-        user = self.user_service.get_by_username(dto.user_name)
-        if user is None:
-            raise NotFoundException(f'User {dto.user_name} not found')
+
 
         for item in dto.details:
             self._positive_data_validation(item.sku, item.qty)
 
         with db.session.begin():
+
+            user = self.user_repo.get_by_username(dto.user_name)
+            if user is None:
+                raise NotFoundException(f'User {dto.user_name} not found')
+
             order = Order(user_id=user.id)
             self.order_repo.add(order)
             db.session.flush() # to have order in DB to go further with the below code

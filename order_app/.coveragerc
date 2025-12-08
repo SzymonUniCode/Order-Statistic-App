@@ -13,4 +13,5 @@ omit =
     webapp/__init__.py
     webapp/core/error_handlers.py
     webapp/services/exceptions.py
+
     */tests/*

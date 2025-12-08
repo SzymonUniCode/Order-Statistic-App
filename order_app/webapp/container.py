@@ -9,6 +9,10 @@ from webapp.database.repositories.products import ProductRepository
 from webapp.database.repositories.storage import StorageRepository
 from webapp.database.repositories.users import UserRepository
 
+from webapp.services.orders.service import OrderService
+from webapp.services.products.service import ProductService
+from webapp.services.storage.service import StorageService
+from webapp.services.users.service import UserService
 
 class Container(containers.DeclarativeContainer):
 
@@ -16,9 +20,10 @@ class Container(containers.DeclarativeContainer):
     # Dzieki temu w tych miejscach uzyjesz @inject, Provide[...]
     wiring_config = containers.WiringConfiguration(
         packages=[
-            "webapp.api.products",
             "webapp.api.orders",
-            "webapp.api.storage"
+            "webapp.api.products",
+            "webapp.api.storage",
+            "webapp.api.users"
         ]
     )
 
@@ -32,14 +37,26 @@ class Container(containers.DeclarativeContainer):
     total_orders_repository = providers.Singleton(TotalOrderRepository)
 
 
-    # inbound_service = providers.Singleton(
-    #     InboundService,
-    #     inbound_repository=inbound_repository)
-    #
-    # outbound_service = providers.Singleton(
-    #     OutobundService,
-    #     outbound_repository=outbound_repository)
-    #
-    # storage_service = providers.Singleton(
-    #     StorageService,
-    #     storage_repository=storage_repository)
+    order_service = providers.Singleton(
+        OrderService,
+        order_repo = total_orders_repository,
+        storage_repo = storage_repository,
+        user_repo = user_repository
+    )
+
+    product_service = providers.Singleton(
+        ProductService,
+        product_repo = products_repository
+    )
+
+
+    storage_service = providers.Singleton(
+        StorageService,
+        storage_repo = storage_repository,
+        product_repo = products_repository
+    )
+
+    user_service = providers.Singleton(
+        UserService,
+        user_repo = user_repository
+    )
