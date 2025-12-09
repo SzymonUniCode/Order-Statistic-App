@@ -35,3 +35,16 @@ def test_get_by_qty_between(
 
     result_sort = sorted([r.sku for r in result])
     assert result_sort == expected_sku
+
+def test_get_by_sku_for_update(session: Session, storage_repo: StorageRepository, storage: list[Storage], sku = "SKU-1"):
+    result = storage_repo.get_by_sku_for_update(sku)
+
+    assert result is not None
+    assert result.sku == sku
+    assert result.qty == 10
+
+def test_get_all(session: Session, storage_repo: StorageRepository, storage: list[Storage]):
+    result = storage_repo.get_all()
+
+    assert result is not None
+    assert len(result) == 3

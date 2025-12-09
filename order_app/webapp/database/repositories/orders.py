@@ -1,10 +1,9 @@
 from sqlalchemy.orm import joinedload, selectinload
-
 from webapp.extensions import db
 from webapp.database.repositories.generic import GenericRepository
 from webapp.database.models.orders import Order
 from webapp.database.models.order_details import OrderDetail
-from webapp.database.models.products import Product
+from webapp.database.models.users import User
 
 from sqlalchemy import select, desc
 
@@ -41,19 +40,18 @@ class TotalOrderRepository(GenericRepository[Order]):
 
         return db.session.execute(stmt).unique().scalars().first()
 
-
     def get_total_orders_by_user_name(self, user_name: str) -> list[Order]:
         stmt = (
             select(Order)
-            .where(Order.user.username == user_name)
+            .join(Order.user)  # join do tabeli users
+            .where(User.username == user_name)
             .options(
                 selectinload(Order.user),
-                joinedload(Order.order_details)
-                .joinedload(OrderDetail.product)
+                joinedload(Order.order_details).joinedload(OrderDetail.product)
             )
         )
 
-        return list(db.session.execute(stmt).scalars().all())
+        return list(db.session.execute(stmt).unique().scalars().all())
 
 
 

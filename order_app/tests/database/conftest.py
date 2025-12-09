@@ -55,7 +55,6 @@ def app() -> Generator[Flask, None, None]:
 @pytest.fixture
 def session(app):
     with app.app_context():
-        db.session.begin()
         yield db.session
         db.session.rollback()
         db.session.close()
@@ -121,12 +120,16 @@ def user_repo():
 def user_1(session):
     from webapp.database.models.users import User
     u_1 = User(username="John Test 1")
+    session.add(u_1)
+    session.flush()
     return u_1
 
 @pytest.fixture
 def user_2(session):
     from webapp.database.models.users import User
     u_2 = User(username="John Test 2")
+    session.add(u_2)
+    session.flush()
     return u_2
 
 
@@ -233,3 +236,33 @@ def orders(session):
     session.flush()
 
     return [order_1, order_2, order_3]
+
+
+
+# ---------------------------------------------------------
+# H) Fixtures Services
+# ---------------------------------------------------------
+
+# @pytest.fixture
+# def user_service(user_repo):
+#     from webapp.services.users.service import UserService
+#     return UserService(user_repo)
+#
+#
+# @pytest.fixture
+# def storage_service(storage_repo):
+#     from webapp.services.storage.service import StorageService
+#     return StorageService(storage_repo)
+#
+#
+# @pytest.fixture
+# def products_service(product_repo):
+#     from webapp.services.products.service import ProductService
+#     return ProductService(product_repo)
+#
+#
+# @pytest.fixture
+# def order_service(order_repo, storage_repo, user_repo):
+#     from webapp.services.orders.service import OrderService
+#     return OrderService(order_repo, storage_repo, user_repo)
+

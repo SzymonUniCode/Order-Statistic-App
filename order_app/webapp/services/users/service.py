@@ -35,6 +35,7 @@ class UserService:
             self.user_repo.delete(user)
         return f"User with id {user_id} deleted successfully."
 
+
     def delete_user(self, user: User) -> str:
         self._get_existing_user(user.id)
         with db.session.begin():
@@ -50,6 +51,7 @@ class UserService:
             self._check_if_username_free(dto.name)
             user = User(username=dto.name)
             self.user_repo.add(user)
+            db.session.flush()
         return user_to_dto(user)
 
 

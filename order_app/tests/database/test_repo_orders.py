@@ -1,8 +1,8 @@
 from webapp.database.models.orders import Order
-from webapp.database.models.order_details import OrderDetail
+from webapp.database.models.users import User
 from webapp.database.repositories.orders import TotalOrderRepository
 from sqlalchemy.orm import Session
-from webapp.database.models.products import Product
+
 
 
 def test_add_order_and_get_all_total_orders(
@@ -46,3 +46,10 @@ def test_get_total_order_by_id(session: Session, order_repo: TotalOrderRepositor
     assert result.order_details[0].qty == 10
     assert result.order_details[1].product_sku == "SKU-2"
     assert result.order_details[1].qty == 20
+
+
+def test_get_total_orders_by_user_name(session: Session, order_repo: TotalOrderRepository, orders: list[Order], users: list[User]):
+    result = order_repo.get_total_orders_by_user_name(user_name = "John Test 1")
+
+    assert result is not None
+    assert len(result) == 2
