@@ -97,6 +97,3 @@ class StorageService:
 
 
 
-
-
-# delete by sku (qty = 0)
