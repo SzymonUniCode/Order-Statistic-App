@@ -1,6 +1,8 @@
 from unittest.mock import MagicMock
 import pytest
 
+from decimal import Decimal
+from webapp.database.models.products import Product
 from webapp.database.models.users import User
 from webapp.services.users.service import UserService
 from webapp.services.storage.service import StorageService
@@ -63,3 +65,11 @@ def fake_user_with_orders():
     user.id = 1
     user.orders = [MagicMock(), MagicMock(), MagicMock()]
     return user
+
+@pytest.fixture
+def fake_products():
+    return [
+        Product(sku="SKU-1", name="Test Product 1", price=Decimal(10.0)),
+        Product(sku="SKU-2", name="Test Product 2", price=Decimal(20.0)),
+        Product(sku="SKU-3", name="Test Product 3", price=Decimal(30.0))
+    ]

@@ -107,3 +107,6 @@ def test_add_user_error(mock_db, mock_user_service, mock_user_repo):
     with pytest.raises(UserAlreadyExistsException):
         mock_user_service.add_user(CreateUserDTO(name="John Test 1"))
 
+
+
+
