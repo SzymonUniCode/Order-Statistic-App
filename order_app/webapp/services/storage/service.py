@@ -60,7 +60,7 @@ class StorageService:
             if storage_product.qty < dto.quantity:
                 raise ServiceException(f'Product {storage_product.sku} cannot have negative qty')
             storage_product.qty -= dto.quantity
-        return f'{dto.quantity} deduct to {storage_product.sku}'
+        return f'{dto.quantity} deduct from {storage_product.sku}'
 
 
     def delete_storage_sku(self, sku: str) -> str:

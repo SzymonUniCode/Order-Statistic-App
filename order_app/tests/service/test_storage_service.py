@@ -6,7 +6,7 @@ from webapp.database.models.products import Product
 from webapp.database.models.storage import Storage
 from webapp.database.repositories.storage import StorageRepository
 from webapp.services.storage.service import StorageService
-from webapp.services.exceptions import NotFoundException, ProductAlreadyExistsException
+from webapp.services.exceptions import NotFoundException, ProductAlreadyExistsException, ServiceException
 from webapp.services.storage.dtos import ModifyStorageDTO
 
 
@@ -81,7 +81,7 @@ def test_add_product_to_storage_success(mock_db, mock_storage_service, mock_stor
 
 
     mock_storage_repo.add.assert_called_once()
-    assert "Product SKU-4 added to storage with qty 40"
+    assert result == "Product SKU-4 added to storage with qty 40"
 
 
 @patch("webapp.services.storage.service.db")
@@ -131,3 +131,139 @@ def test_add_qty_to_storage_sku_success(mock_db, mock_storage_service, mock_stor
 
     assert result_1 == "10 added to SKU-1"
     assert fake_storage[0].qty == 20
+
+
+@patch("webapp.services.storage.service.db")
+def test_add_qty_to_storage_sku_error_product_do_not_exist(mock_db, mock_storage_service, mock_storage_repo, mock_product_repo, fake_storage):
+
+    mock_db.session.begin.return_value.__enter__.return_value = None
+
+    dto = ModifyStorageDTO(sku="SKU-1", quantity=10)
+
+    mock_product_repo.get_by_sku.return_value = None
+
+    with pytest.raises(NotFoundException):
+        mock_storage_service.add_qty_to_storage_sku(dto)
+
+    mock_product_repo.get_by_sku.assert_called_once()
+
+
+
+@patch("webapp.services.storage.service.db")
+def test_add_qty_to_storage_sku_error_storage_do_not_exist(mock_db, mock_storage_service, mock_storage_repo, mock_product_repo, fake_storage):
+
+    mock_db.session.begin.return_value.__enter__.return_value = None
+
+    dto = ModifyStorageDTO(sku="SKU-1", quantity=10)
+
+    mock_storage_repo.get_by_sku.return_value = None
+
+    with pytest.raises(NotFoundException):
+        mock_storage_service.add_qty_to_storage_sku(dto)
+
+    mock_product_repo.get_by_sku.assert_called_once()
+    mock_storage_repo.get_by_sku.assert_called_once()
+
+
+
+@patch("webapp.services.storage.service.db")
+def test_deduct_qty_from_storage_sku_success(
+        mock_db,
+        mock_storage_service,
+        mock_storage_repo,
+        mock_product_repo
+    ):
+
+    mock_db.session.begin.return_value.__enter__.return_value = None
+
+    dto = ModifyStorageDTO(sku="SKU-1", quantity=1)
+
+    mock_product_repo.get_by_sku.return_value =MagicMock()
+
+    storage_obj = Storage(sku="SKU-1", qty=10)
+    mock_storage_repo.get_by_sku.return_value = storage_obj
+
+    result = mock_storage_service.deduct_qty_from_storage_sku(dto)
+
+    assert result == "1 deduct from SKU-1"
+    assert storage_obj.qty == 9
+
+
+
+@patch("webapp.services.storage.service.db")
+def test_deduct_qty_from_storage_sku_error_not_enough_qty(
+        mock_db,
+        mock_storage_service,
+        mock_storage_repo,
+        mock_product_repo
+    ):
+
+    mock_db.session.begin.return_value.__enter__.return_value = None
+
+    dto = ModifyStorageDTO(sku="SKU-1", quantity=11)
+
+    mock_product_repo.get_by_sku.return_value =MagicMock()
+
+    storage_obj = Storage(sku="SKU-1", qty=10)
+    mock_storage_repo.get_by_sku.return_value = storage_obj
+
+    with pytest.raises(ServiceException):
+        mock_storage_service.deduct_qty_from_storage_sku(dto)
+
+    assert storage_obj.qty == 10
+
+    mock_product_repo.get_by_sku.assert_called_once()
+
+
+
+
+@patch("webapp.services.storage.service.db")
+def test_delete_storage_sku_success(
+        mock_db,
+        mock_storage_service,
+        mock_storage_repo,
+        mock_product_repo
+    ):
+
+    mock_db.session.begin.return_value.__enter__.return_value = None
+
+    mock_product_repo.get_by_sku.return_value = MagicMock()
+
+    storage_obj = Storage(sku="SKU-1", qty=0)
+    mock_storage_repo.get_by_sku.return_value = storage_obj
+
+    result = mock_storage_service.delete_storage_sku("SKU-1")
+
+    mock_storage_repo.delete_by_id.assert_called_once_with("SKU-1")
+
+    assert result == "Product SKU-1 deleted from storage"
+
+
+
+@patch("webapp.services.storage.service.db")
+def test_delete_storage_sku_error(
+        mock_db,
+        mock_storage_service,
+        mock_storage_repo,
+        mock_product_repo
+    ):
+
+    mock_db.session.begin.return_value.__enter__.return_value = None
+
+    mock_product_repo.get_by_sku.return_value = MagicMock()
+
+    storage_obj = Storage(sku="SKU-1", qty=1)
+    mock_storage_repo.get_by_sku.return_value = storage_obj
+
+    with pytest.raises(ServiceException):
+        mock_storage_service.delete_storage_sku("SKU-1")
+
+
+
+
+
+
+
+
+
+
