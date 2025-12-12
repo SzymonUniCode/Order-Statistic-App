@@ -50,7 +50,7 @@ class OrderService:
 # Create methods
 # ---------------------------------------------------------------------------------------
 
-    def add_order_with_details(self, dto: CreateOrderDTO) -> None:
+    def add_order_with_details(self, dto: CreateOrderDTO) -> str:
 
 
         for item in dto.details:
@@ -63,15 +63,18 @@ class OrderService:
                 raise NotFoundException(f'User {dto.user_name} not found')
 
             order = Order(user_id=user.id)
-            self.order_repo.add(order)
+            order = self.order_repo.add(order)  # creating an object of adding order to pass tests
             db.session.flush() # to have order in DB to go further with the below code
 
             for detail in dto.details:
                 self._add_product_internal(order, detail)
 
+        return f'Order {order.id} created successfully with {len(dto.details)} products'
+
 
     def add_product_to_order(self, order_id: int, dto: CreateOrderDetailDTO) -> None:
         self._positive_data_validation(dto.sku, dto.qty)
+
 
         with db.session.begin():
             order = self.order_repo.get(order_id)
@@ -80,19 +83,22 @@ class OrderService:
 
             self._add_product_internal(order, dto)
 
+        return f"Product {dto.sku} of {dto.qty} qty added to order {order_id} successfully"
+
 # ---------------------------------------------------------------------------------------
 # Delete methods
 # ---------------------------------------------------------------------------------------
 
 
     # delete order
-    def delete_order_with_details(self, order_id: int) -> None:
+    def delete_order_with_details(self, order_id: int) -> str:
         with db.session.begin():
             self.order_repo.delete_by_id(order_id)
-            print(f'Order {order_id} deleted with all details')
+
+        return f'Order {order_id} deleted with all details'
 
 
-    def delete_product_in_order(self, dto: DeleteProductsInOrderDTO) -> None:
+    def delete_product_in_order(self, dto: DeleteProductsInOrderDTO) -> str:
         with db.session.begin():
             order = self.order_repo.get(dto.order_id)
             if order is None:
@@ -113,6 +119,7 @@ class OrderService:
             storage_item.qty += detail.qty
             order.order_details.remove(detail)
 
+        return f'Product {dto.product_sku} deleted from order {dto.order_id}'
 
 
 
@@ -127,7 +134,7 @@ class OrderService:
 # ---------------------------------------------------------------------------------------
 
     def _check_if_user_name_exists(self, user_name: str) -> None:
-        if self.user_service.get_by_username(user_name) is None:
+        if self.user_repo.get_by_username(user_name) is None:
             raise NotFoundException(f'{user_name} does not exist')
 
 

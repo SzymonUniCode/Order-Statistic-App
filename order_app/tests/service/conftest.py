@@ -2,6 +2,9 @@ from unittest.mock import MagicMock
 import pytest
 
 from decimal import Decimal
+
+from webapp.database.models.order_details import OrderDetail
+from webapp.database.models.orders import Order
 from webapp.database.models.products import Product
 from webapp.database.models.storage import Storage
 from webapp.database.models.users import User
@@ -84,3 +87,31 @@ def fake_storage():
         Storage(sku="SKU-2", qty=20),
         Storage(sku="SKU-3", qty=30)
     ]
+
+@pytest.fixture
+def fake_order_details_1():
+    return [
+        OrderDetail(order_id=1, product_sku="SKU-1", qty=10),
+        OrderDetail(order_id=1, product_sku="SKU-2", qty=20),
+        OrderDetail(order_id=1, product_sku="SKU-3", qty=30)
+    ]
+
+
+@pytest.fixture
+def fake_order_details_2():
+    return [
+        OrderDetail(order_id=2, product_sku="SKU-2", qty=20),
+        OrderDetail(order_id=2, product_sku="SKU-3", qty=30),
+        OrderDetail(order_id=2, product_sku="SKU-4", qty=40)
+    ]
+
+
+@pytest.fixture
+def fake_orders_with_details(fake_order_details_1, fake_order_details_2, fake_user_with_orders):
+    o1 = Order(id=1, user_id=1, order_details=fake_order_details_1)
+    o1.user = fake_user_with_orders
+
+    o2 = Order(id=2, user_id=1, order_details=fake_order_details_2)
+    o2.user = fake_user_with_orders
+
+    return [o1, o2]
