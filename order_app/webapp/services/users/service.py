@@ -23,7 +23,9 @@ class UserService:
 
     def get_by_username(self, username: str) -> ReadUserDTO | None:
         user = self.user_repo.get_by_username(username)
-        return user_to_dto(user) if user else None
+        if user is None:
+            raise NotFoundException(f"User with username {username} not found.")
+        return user_to_dto(user)
 
 # ---------------------------------------------------------------------------------------
 # Delete methods
@@ -35,18 +37,20 @@ class UserService:
             self.user_repo.delete(user)
         return f"User with id {user_id} deleted successfully."
 
+    # no User in https so this is the wrong function because I do not have access to User from frontend.
+    # clear delete is by id
 
-    def delete_user(self, user: User) -> str:
-        self._get_existing_user(user.id)
-        with db.session.begin():
-            self.user_repo.delete(user)
-        return f"User {user.username} deleted successfully."
+    # def delete_user(self, user: User) -> str:
+    #     self._get_existing_user(user.id)
+    #     with db.session.begin():
+    #         self.user_repo.delete(user)
+    #     return f"User {user.username} deleted successfully."
 
 # ---------------------------------------------------------------------------------------
 # Create methods
 # ---------------------------------------------------------------------------------------
 
-    def add_user(self, dto: CreateUserDTO):
+    def add_user(self, dto: CreateUserDTO) -> ReadUserDTO:
         with db.session.begin():
             self._check_if_username_free(dto.name)
             user = User(username=dto.name)

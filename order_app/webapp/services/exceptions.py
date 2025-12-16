@@ -1,20 +1,20 @@
 class ServiceException(Exception):
-    pass
+    status_code = 400
 
 
 class NotFoundException(ServiceException):
-    pass
+    status_code = 404
 
 
 class ValidationException(ServiceException):
-    pass
+    status_code = 400
 
 
 class NotEnoughStockException(ServiceException):
-    pass
+    status_code = 409
 
 class ProductAlreadyExistsException(ServiceException):
-    pass
+    status_code = 409
 
 class UserAlreadyExistsException(ServiceException):
-    pass
+    status_code = 409
