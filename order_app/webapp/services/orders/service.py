@@ -72,7 +72,7 @@ class OrderService:
         return f'Order {order.id} created successfully with {len(dto.details)} products'
 
 
-    def add_product_to_order(self, order_id: int, dto: CreateOrderDetailDTO) -> None:
+    def add_product_to_order(self, order_id: int, dto: CreateOrderDetailDTO) -> str:
         self._positive_data_validation(dto.sku, dto.qty)
 
 

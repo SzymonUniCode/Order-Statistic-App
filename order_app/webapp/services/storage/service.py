@@ -25,12 +25,16 @@ class StorageService:
 
     def get_by_sku(self, sku: str) -> ReadStorageDTO | None:
         stmt = self.storage_repo.get_by_sku(sku)
+        if stmt is None:
+            raise NotFoundException(f'Product {sku} not found in storage')
         return storage_to_dto(stmt) if stmt else None
 
 
 
     def get_by_qty_between(self, min_qty: int, max_qty: int) -> list[ReadStorageDTO]:
         stmt = self.storage_repo.get_by_qty_between(min_qty, max_qty)
+        if len(stmt) == 0:
+            raise NotFoundException(f'Product with qty between {min_qty} and {max_qty} not found in storage')
         return [storage_to_dto(s) for s in stmt]
 
 # ---------------------------------------------------------------------------------------
