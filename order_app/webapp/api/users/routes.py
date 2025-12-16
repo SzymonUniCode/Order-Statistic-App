@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from flask.typing import ResponseReturnValue
 from dependency_injector.wiring import inject, Provide
-from webapp.api.users.schemas import UserResponseSchema, CreateUserSchema
+from webapp.api.users.schemas import CreateUserSchema
 from webapp.api.users.mappers import to_schemas_user_response, to_dto_create_user
 
 from webapp.services.users.service import UserService
