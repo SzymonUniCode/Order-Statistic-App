@@ -6,5 +6,5 @@ class StorageResponseSchema(BaseModel):
 
 
 class ModifyStorageSchema(BaseModel):
-    sku: str
-    quantity: int
+    sku: str = Field(min_length=3)
+    quantity: int = Field(gt=0)
