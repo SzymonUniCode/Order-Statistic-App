@@ -24,7 +24,7 @@ def test_get_all(mock_db: MagicMock, mock_user_service: UserService, mock_user_r
 
 
 @patch("webapp.services.users.service.db")
-def test_get_by_username(mock_db: MagicMock, mock_user_service: UserService, mock_user_repo: UserRepository, fake_user_with_orders):
+def test_get_by_username_success(mock_db: MagicMock, mock_user_service: UserService, mock_user_repo: UserRepository, fake_user_with_orders):
 
     mock_user_repo.get_by_username.return_value = fake_user_with_orders
 
@@ -34,6 +34,16 @@ def test_get_by_username(mock_db: MagicMock, mock_user_service: UserService, moc
     assert result.name == "John Test 1"
     assert result.orders_qty == 3
 
+
+@patch("webapp.services.users.service.db")
+def test_get_by_username_error(mock_db: MagicMock, mock_user_service: UserService, mock_user_repo: UserRepository, fake_user_with_orders):
+
+    mock_user_repo.get_by_username.return_value = None
+
+    with pytest.raises(NotFoundException):
+        mock_user_service.get_by_username("John Test 1")
+
+    mock_user_repo.get_by_username.assert_called_once_with("John Test 1")
 
 
 
@@ -47,7 +57,7 @@ def test_delete_user_by_id_success(mock_db, mock_user_service, mock_user_repo, f
 
     result = mock_user_service.delete_user_by_id(1)
 
-    mock_user_repo.delete.assert_called_once_with(fake_user_with_orders)
+    mock_user_repo.delete_by_id.assert_called_once_with(1)
     assert result == "User with id 1 deleted successfully."
 
 
@@ -62,20 +72,6 @@ def test_delete_user_by_id_error(mock_db, mock_user_service, mock_user_repo, fak
     with pytest.raises(NotFoundException):
         mock_user_service.delete_user_by_id(1)
 
-
-
-@patch("webapp.services.users.service.db")
-def test_delete_user(mock_db, mock_user_service, mock_user_repo, fake_user_with_orders):
-
-    mock_db.session.begin.return_value.__enter__.return_value = None
-
-    mock_user_repo.get.return_value = fake_user_with_orders
-
-    result = mock_user_service.delete_user(fake_user_with_orders)
-
-
-    mock_user_repo.delete.assert_called_once_with(fake_user_with_orders)
-    assert result == "User John Test 1 deleted successfully."
 
 
 @patch("webapp.services.users.service.db")

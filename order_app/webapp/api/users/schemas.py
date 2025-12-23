@@ -7,7 +7,7 @@ class CreateUserSchema(BaseModel):
     name: str = Field(
         min_length=3,
         max_length=20,
-        pattern=r'^[a-zA-Z]+$'
+        pattern=r'^[a-zA-Z0-9 ]+$'
     )
 
 

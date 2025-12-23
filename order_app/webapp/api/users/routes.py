@@ -31,7 +31,8 @@ def delete_user_by_id(user_id: int, user_service: UserService = Provide[Containe
 @user_bp.post("/")
 @inject
 def create_user(user_service: UserService = Provide[Container.user_service]) -> ResponseReturnValue:
-    payload = CreateUserSchema.model_validate(request.get_json or {})
+    data = request.get_json() or {}
+    payload = CreateUserSchema.model_validate(data)
     dto = to_dto_create_user(payload)
     read_dto = user_service.add_user(dto)
     return jsonify(to_schemas_user_response(read_dto).model_dump(mode='json')), 201

@@ -23,11 +23,11 @@ class StorageService:
         stmt = self.storage_repo.get_all()
         return [storage_to_dto(s) for s in stmt]
 
-    def get_by_sku(self, sku: str) -> ReadStorageDTO | None:
+    def get_by_sku(self, sku: str) -> ReadStorageDTO:
         stmt = self.storage_repo.get_by_sku(sku)
         if stmt is None:
             raise NotFoundException(f'Product {sku} not found in storage')
-        return storage_to_dto(stmt) if stmt else None
+        return storage_to_dto(stmt)
 
 
 

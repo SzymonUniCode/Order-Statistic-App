@@ -26,7 +26,7 @@ def test_get_all(mock_storage_service, mock_storage_repo, fake_storage):
     assert result[2].quantity == 30
 
 
-def test_get_by_sku(mock_storage_service, mock_storage_repo, fake_storage):
+def test_get_by_sku_success(mock_storage_service, mock_storage_repo, fake_storage):
 
     mock_storage_repo.get_by_sku.return_value = fake_storage[0]
 
@@ -34,6 +34,16 @@ def test_get_by_sku(mock_storage_service, mock_storage_repo, fake_storage):
 
     assert result.sku == "SKU-1"
     assert result.quantity == 10
+
+
+def test_get_by_sku_error(mock_storage_service, mock_storage_repo):
+
+    mock_storage_repo.get_by_sku.return_value = None
+
+    with pytest.raises(NotFoundException):
+        mock_storage_service.get_by_sku("SKU-99")
+
+    mock_storage_repo.get_by_sku.assert_called_once_with("SKU-99")
 
 
 @pytest.mark.parametrize(
@@ -44,7 +54,7 @@ def test_get_by_sku(mock_storage_service, mock_storage_repo, fake_storage):
         (22, 30, ["SKU-3"], 1)
     ]
 )
-def test_get_by_qty_between(
+def test_get_by_qty_between_success(
         mock_storage_service,
         mock_storage_repo,
         fake_storage,
@@ -63,6 +73,22 @@ def test_get_by_qty_between(
 
     assert len(result) == expected_len
     assert all(r.sku in expected_sku for r in result)
+
+
+def test_get_by_qty_between_error(
+        mock_storage_service,
+        mock_storage_repo,
+        min_qty: int = 1,
+        max_qty: int = 10
+    ):
+
+
+    mock_storage_repo.get_by_qty_between.return_value = []
+
+    with pytest.raises(NotFoundException):
+        mock_storage_service.get_by_qty_between(min_qty, max_qty)
+
+    mock_storage_repo.get_by_qty_between.assert_called_once_with(min_qty, max_qty)
 
 
 
