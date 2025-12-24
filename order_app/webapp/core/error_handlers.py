@@ -1,36 +1,37 @@
 from flask import Flask, jsonify
 from flask.typing import ResponseReturnValue
+from pydantic import ValidationError
+
+from webapp.services.exceptions import ServiceException
 
 
 def register_error_handlers(app: Flask) -> None:
 
     # -------------------------------
-    # 404 - Not Found
+    # Pydantic validation (400)
     # -------------------------------
-    @app.errorhandler(404)
-    def handle_not_found_error(error: Exception) -> ResponseReturnValue:
-        app.logger.warning(f"404 Not Found: {str(error)}")
+    @app.errorhandler(ValidationError)
+    def handle_pydantic_validation_error(error: ValidationError) -> ResponseReturnValue:
         return jsonify({
-            "message": "Resource not found"
-        }), 404
-
-    # -------------------------------
-    # 400 - Bad Request
-    # -------------------------------
-    @app.errorhandler(400)
-    def handle_bad_request(error: Exception) -> ResponseReturnValue:
-        app.logger.warning(f"400 Bad Request: {str(error)}")
-        return jsonify({
-            "message": "Bad request"
+            "error": "Validation error",
+            "details": error.errors(),
         }), 400
 
     # -------------------------------
-    # 500 - Internal Server Error
+    # Domain / Service exceptions
     # -------------------------------
-
-    @app.errorhandler(Exception)
-    def handle_error(error: Exception) -> ResponseReturnValue:
-        app.logger.exception(f'Handled error: {str(error)}')
+    @app.errorhandler(ServiceException)
+    def handle_service_exception(error: ServiceException) -> ResponseReturnValue:
         return jsonify({
-            'message': str(error)
+            "error": str(error),
+        }), error.status_code
+
+    # -------------------------------
+    # Fallback (500)
+    # -------------------------------
+    @app.errorhandler(Exception)
+    def handle_unexpected_error(error: Exception) -> ResponseReturnValue:
+        app.logger.exception("Unhandled exception")
+        return jsonify({
+            "error": "Internal server error"
         }), 500

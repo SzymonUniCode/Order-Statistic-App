@@ -6,6 +6,7 @@ from flask import Flask, Response
 from flask.testing import FlaskClient
 from sqlalchemy.pool import StaticPool
 
+from webapp import register_error_handlers
 from webapp.database.models.products import Product
 from webapp.database.models.users import User
 from webapp.extensions import db
@@ -50,6 +51,7 @@ def app() -> Generator[Flask, Any, None]:
             db.session.remove()
         return response
 
+    register_error_handlers(app)
 
     with app.app_context():
         db.create_all()
