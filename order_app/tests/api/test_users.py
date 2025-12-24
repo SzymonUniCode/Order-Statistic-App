@@ -1,5 +1,5 @@
 from flask.testing import FlaskClient
-import pytest
+
 
 
 def test_get_all_users(client: FlaskClient, seed_user_data) -> None:

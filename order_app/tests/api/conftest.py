@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Any, Generator
 
 import pytest
@@ -5,6 +6,7 @@ from flask import Flask, Response
 from flask.testing import FlaskClient
 from sqlalchemy.pool import StaticPool
 
+from webapp.database.models.products import Product
 from webapp.database.models.users import User
 from webapp.extensions import db
 from webapp.container import Container
@@ -69,6 +71,15 @@ def seed_user_data(app: Flask) -> None:
         user_1 = User(username="John Test 1")
         user_2 = User(username="John Test 2")
         db.session.add_all([user_1, user_2])
+        db.session.commit()
+
+
+@pytest.fixture()
+def seed_product_data(app: Flask) -> None:
+    with app.app_context():
+        product_1 = Product(sku="SKU-1", name="Test 1", price=Decimal(10.0))
+        product_2 = Product(sku="SKU-2", name="Test 2", price=Decimal(20.0))
+        db.session.add_all([product_1, product_2])
         db.session.commit()
 
 
