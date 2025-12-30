@@ -7,6 +7,8 @@ from flask.testing import FlaskClient
 from sqlalchemy.pool import StaticPool
 
 from webapp import register_error_handlers
+from webapp.database.models.order_details import OrderDetail
+from webapp.database.models.orders import Order
 from webapp.database.models.products import Product
 from webapp.database.models.storage import Storage
 from webapp.database.models.users import User
@@ -96,4 +98,35 @@ def seed_storage_data(app: Flask) -> None:
         db.session.commit()
 
 
+@pytest.fixture()
+def seed_order_data(
+    app: Flask,
+    seed_user_data,
+    seed_product_data,
+    seed_storage_data
+) -> None:
+    with app.app_context():
+
+        # Order 1
+        order_1 = Order(user_id=1)
+        db.session.add(order_1)
+        db.session.flush()  # ⬅️ TERAZ order_1.id ISTNIEJE
+
+        order_1.order_details.append(
+            OrderDetail(product_sku="SKU-1", qty=10)
+        )
+        order_1.order_details.append(
+            OrderDetail(product_sku="SKU-2", qty=20)
+        )
+
+        # Order 2
+        order_2 = Order(user_id=2)
+        db.session.add(order_2)
+        db.session.flush()
+
+        order_2.order_details.append(
+            OrderDetail(product_sku="SKU-3", qty=30)
+        )
+
+        db.session.commit()
 

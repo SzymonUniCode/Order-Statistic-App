@@ -42,16 +42,16 @@ def add_order_with_details(order_service: OrderService = Provide[Container.order
     payload = CreateOrderSchema.model_validate(request.get_json() or {})
     dto = to_dto_create_order(payload)
     result = order_service.add_order_with_details(dto)
-    return jsonify({"message":result}) , 200
+    return jsonify({"message":result}) , 201
 
 
-@orders_bp.patch("/<int:order_id>/items")
+@orders_bp.post("/<int:order_id>/items")
 @inject
 def add_product_to_order(order_id: int, order_service: OrderService = Provide[Container.order_service]) -> ResponseReturnValue:
     payload = CreateOrderDetailSchema.model_validate(request.get_json() or {})
     dto = to_dto_create_order_detail(payload)
     result = order_service.add_product_to_order(order_id, dto)
-    return jsonify({"message":result}), 200
+    return jsonify({"message":result}), 201
 
 
 @orders_bp.delete("/<int:order_id>")
