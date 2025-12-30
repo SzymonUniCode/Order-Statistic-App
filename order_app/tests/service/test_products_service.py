@@ -1,5 +1,5 @@
 from decimal import Decimal
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 import pytest
 
 from webapp.database.models.products import Product
@@ -12,7 +12,7 @@ from webapp.services.products.dtos import CreateProductDTO
 
 def test_get_all(
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
+        mock_product_repo: MagicMock,
         fake_products: list[Product]
     ):
 
@@ -39,7 +39,7 @@ def test_get_all(
 
 def test_get_by_sku_success(
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
+        mock_product_repo: MagicMock,
         fake_products: list[Product],
         sku = "SKU-3"
     ):
@@ -55,8 +55,8 @@ def test_get_by_sku_success(
 
 def test_get_by_sku_error(
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
-        fake_products: list[Product]
+        mock_product_repo: MagicMock,
+
     ):
 
     mock_product_repo.get_by_sku.return_value = None
@@ -79,7 +79,7 @@ def test_get_by_sku_error(
 )
 def test_get_by_price_between_success(
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
+        mock_product_repo: MagicMock,
         fake_products: list[Product],
         min_price: Decimal,
         max_price: Decimal,
@@ -99,8 +99,8 @@ def test_get_by_price_between_success(
 
 def test_get_by_price_between_error(
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
-        fake_products: list[Product],
+        mock_product_repo: MagicMock,
+
     ):
 
     mock_product_repo.get_by_price_between.return_value = []
@@ -111,7 +111,7 @@ def test_get_by_price_between_error(
 
 def test_get_by_part_name_success(
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
+        mock_product_repo: MagicMock,
         fake_products: list[Product],
         part_name: str = "Product"
     ):
@@ -127,8 +127,8 @@ def test_get_by_part_name_success(
 
 def test_get_by_part_name_error(
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
-        fake_products: list[Product]
+        mock_product_repo: MagicMock,
+
     ):
 
     mock_product_repo.get_by_part_name.return_value = []
@@ -167,7 +167,7 @@ def test_create_product_success(
 def test_create_product_error(
         mock_db,
         mock_product_service: ProductService,
-        mock_product_repo: ProductRepository,
+        mock_product_repo: MagicMock,
     ):
     mock_db.session.begin.return_value.__enter__.return_value = None
 

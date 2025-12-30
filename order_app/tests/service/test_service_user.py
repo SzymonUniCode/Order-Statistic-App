@@ -3,14 +3,18 @@ import pytest
 
 from tests.service.conftest import fake_user_with_orders
 from webapp.database.models.users import User
-from webapp.database.repositories.users import UserRepository
 from webapp.services.users.service import UserService
 from webapp.services.users.dtos import CreateUserDTO, ReadUserDTO
 from webapp.services.exceptions import NotFoundException, UserAlreadyExistsException
 
 
 @patch("webapp.services.users.service.db")                                  # do not allow open real db connection
-def test_get_all(mock_db: MagicMock, mock_user_service: UserService, mock_user_repo: UserRepository, fake_user_with_orders):
+def test_get_all(
+        mock_db: MagicMock,
+        mock_user_service: UserService,
+        mock_user_repo: MagicMock,
+        fake_user_with_orders
+    ):
 
     mock_user_repo.get_all.return_value = [fake_user_with_orders]           # set the return for get_all method
 
@@ -24,7 +28,12 @@ def test_get_all(mock_db: MagicMock, mock_user_service: UserService, mock_user_r
 
 
 @patch("webapp.services.users.service.db")
-def test_get_by_username_success(mock_db: MagicMock, mock_user_service: UserService, mock_user_repo: UserRepository, fake_user_with_orders):
+def test_get_by_username_success(
+        mock_db: MagicMock,
+        mock_user_service: UserService,
+        mock_user_repo: MagicMock,
+        fake_user_with_orders
+    ):
 
     mock_user_repo.get_by_username.return_value = fake_user_with_orders
 
@@ -36,7 +45,12 @@ def test_get_by_username_success(mock_db: MagicMock, mock_user_service: UserServ
 
 
 @patch("webapp.services.users.service.db")
-def test_get_by_username_error(mock_db: MagicMock, mock_user_service: UserService, mock_user_repo: UserRepository, fake_user_with_orders):
+def test_get_by_username_error(
+        mock_db: MagicMock,
+        mock_user_service: UserService,
+        mock_user_repo: MagicMock,
+        fake_user_with_orders
+    ):
 
     mock_user_repo.get_by_username.return_value = None
 
