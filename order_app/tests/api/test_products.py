@@ -10,8 +10,8 @@ def test_get_all_products(client: FlaskClient, seed_product_data) -> None:
     assert resp.status_code == 200
 
     data = resp.get_json()
-    assert len(data) == 2
-    assert {u["sku"] for u in data} == {"SKU-1", "SKU-2"}
+    assert len(data) == 3
+    assert {u["sku"] for u in data} == {"SKU-1", "SKU-2", "SKU-4"}
 
 
 def test_get_by_sku(client: FlaskClient, seed_product_data) -> None:
@@ -48,7 +48,7 @@ def test_create_product(client: FlaskClient, seed_product_data) -> None:
     assert resp_2.status_code == 200
 
     data = resp_2.get_json()
-    assert len(data) == 3
+    assert len(data) == 4
     assert any(p["sku"] == "SKU-3" for p in data)
 
 

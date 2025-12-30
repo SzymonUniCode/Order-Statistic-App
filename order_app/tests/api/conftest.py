@@ -8,6 +8,7 @@ from sqlalchemy.pool import StaticPool
 
 from webapp import register_error_handlers
 from webapp.database.models.products import Product
+from webapp.database.models.storage import Storage
 from webapp.database.models.users import User
 from webapp.extensions import db
 from webapp.container import Container
@@ -81,7 +82,18 @@ def seed_product_data(app: Flask) -> None:
     with app.app_context():
         product_1 = Product(sku="SKU-1", name="Test 1", price=Decimal(10.0))
         product_2 = Product(sku="SKU-2", name="Test 2", price=Decimal(20.0))
-        db.session.add_all([product_1, product_2])
+        product_4 = Product(sku="SKU-4", name="Test 4", price=Decimal(40.0))
+        db.session.add_all([product_1, product_2, product_4])
         db.session.commit()
+
+
+@pytest.fixture()
+def seed_storage_data(app: Flask) -> None:
+    with app.app_context():
+        storage_1 = Storage(sku="SKU-1", qty=10)
+        storage_2 = Storage(sku="SKU-2", qty=20)
+        db.session.add_all([storage_1, storage_2])
+        db.session.commit()
+
 
 
