@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask.typing import ResponseReturnValue
 from pydantic import ValidationError
+from werkzeug.exceptions import HTTPException
 
 from webapp.services.exceptions import ServiceException
 
@@ -27,7 +28,17 @@ def register_error_handlers(app: Flask) -> None:
         }), error.status_code
 
     # -------------------------------
-    # Fallback (500)
+    # HTTP errors (404, 405, etc.)
+    # -------------------------------
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(error: HTTPException) -> ResponseReturnValue:
+        return jsonify({
+            "error": error.name,
+            "description": error.description,
+        }), error.code
+
+    # -------------------------------
+    # REAL fallback (500)
     # -------------------------------
     @app.errorhandler(Exception)
     def handle_unexpected_error(error: Exception) -> ResponseReturnValue:

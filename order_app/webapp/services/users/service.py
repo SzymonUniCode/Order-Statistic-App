@@ -32,8 +32,9 @@ class UserService:
 # ---------------------------------------------------------------------------------------
 
     def delete_user_by_id(self, user_id: int) -> str:
-        user = self._get_existing_user(user_id)
-        self.user_repo.delete_by_id(user_id)
+        with db.session.begin():
+            user = self._get_existing_user(user_id)
+            self.user_repo.delete_by_id(user_id)
         return f"User with id {user_id} deleted successfully."
 
     # no User in https so this is the wrong function because I do not have access to User from frontend.

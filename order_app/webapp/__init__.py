@@ -1,11 +1,13 @@
 from flask import Flask
+
+from .api import api_bp
 from .settings import config
 from .container import Container
 from .extensions import db, migrate
 from .core.error_handlers import register_error_handlers
 
 def create_app() -> Flask:
-    app = Flask(__name__)                               # screate flask app engine
+    app = Flask(__name__)                               # create flask app engine
 
 
     container = Container()                             # create containers of objects to avoid circular dependencies
@@ -15,7 +17,7 @@ def create_app() -> Flask:
     config['default'].init_app(app)                     # set copied settings to app.config
 
     register_error_handlers(app)
-    # app.register_blueprint(api_bp)
+    app.register_blueprint(api_bp)
 
     from .database.models import users
 
@@ -24,8 +26,8 @@ def create_app() -> Flask:
 
 
     with app.app_context():                             # inform flask that we are inside the app and can use all functionality
-        # app.logger.info("[ API GATEWAY ROUTES ]:")    # separator - shown in console line before log below
-        # app.logger.info(app.url_map)                  # list of all API's endpoints - allows seeing if all endpoints are working,
+        app.logger.info("[ API GATEWAY ROUTES ]:")      # separator - shown in console line before log below
+        app.logger.info(app.url_map)                    # list of all API's endpoints - allows seeing if all endpoints are working,
                                                         # Dependency injection works if there are no duplicates in endpoints,
                                                         # check if endpoints work before the API starts, better debug-ing
         routes = []
